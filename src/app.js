@@ -17,8 +17,11 @@ const path = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static(join(path, '../public')));
 
-// TODO setja upp proxy þjónustu
-// TODO birta index.html skjal
+app.use('/proxy', proxyRouter);
+
+app.get('/', (req, res) => {
+    res.sendFile(join(path, '../index.html'));
+});
 
 /**
  * Middleware sem sér um 404 villur.
@@ -28,10 +31,12 @@ app.use(express.static(join(path, '../public')));
  * @param {function} next Næsta middleware
  */
 // eslint-disable-next-line no-unused-vars
+/*
 function notFoundHandler(req, res, next) {
   const title = 'Síða fannst ekki';
   res.status(404).render('error', { title });
 }
+*/
 
 /**
  * Middleware sem sér um villumeðhöndlun.
@@ -42,14 +47,16 @@ function notFoundHandler(req, res, next) {
  * @param {function} next Næsta middleware
  */
 // eslint-disable-next-line no-unused-vars
+/*
 function errorHandler(err, req, res, next) {
   console.error(err);
   const title = 'Villa kom upp';
   res.status(500).render('error', { title });
 }
+*/
 
-app.use(notFoundHandler);
-app.use(errorHandler);
+// app.use(notFoundHandler);
+// app.use(errorHandler);
 
 // Verðum að setja bara *port* svo virki á heroku
 app.listen(port, () => {
