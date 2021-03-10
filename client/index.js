@@ -2,19 +2,58 @@ import { fetchEarthquakes } from './lib/earthquakes';
 import { el, element, formatDate } from './lib/utils';
 import { init, createPopup } from './lib/map';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  // TODO
-  // Bæta við virkni til að sækja úr lista
-  // Nota proxy
-  // Hreinsa header og upplýsingar þegar ný gögn eru sótt
-  // Sterkur leikur að refactora úr virkni fyrir event handler í sér fall
+function dataDescriptor(type, period) {
+  let iskType = `${type}+`;
 
-  const earthquakes = await fetchEarthquakes();
+  if (type === 'all') {
+    iskType = 'Allir';
+  } else if (type === 'significant') {
+    iskType = 'Verulegir';
+  }
 
-  // Fjarlægjum loading skilaboð eftir að við höfum sótt gögn
-  const loading = document.querySelector('.loading');
-  const parent = loading.parentNode;
-  parent.removeChild(loading);
+  let iskPeriod;
+
+  if (period === 'month') {
+    iskPeriod = 'seinasta mánuð';
+  } else if (period === 'week') {
+    iskPeriod = 'seinustu viku';
+  } else if (period === 'day') {
+    iskPeriod = 'seinasta dag';
+  } else if (period === 'hour') {
+    iskPeriod = 'seinustu klukkustund';
+  }
+
+  return `${iskType} jarðskjálftar ${iskPeriod}`
+}
+
+function cacheDescriptor(cacheInfo) {
+  let cacheStatus = '';
+
+  if (cacheInfo.cached) {
+    cacheStatus = 'ekki';
+    console.log(cacheInfo.cached);
+  }
+
+  const info = `Gögn eru ${cacheStatus} í cache.
+    Fyrirspurn tók ${cacheInfo.elapsed} sek.`;
+
+  return info;
+}
+
+async function fetchAndRender(type, period) {
+  const ul = document.querySelector('.earthquakes');
+
+  while (ul.firstChild) {
+    ul.removeChild(ul.firstChild);
+  }
+
+  let loading = document.querySelector('.loading').innerHTML = 'Hleð gögnum...';
+  
+  const { earthquakes, cacheInfo } = await fetchEarthquakes(type, period);
+
+  loading = document.querySelector('.loading').innerHTML = '';
+
+  document.querySelector('h1').innerHTML = dataDescriptor(type, period);
 
   if (!earthquakes) {
     parent.appendChild(
@@ -22,10 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
   }
 
-  const ul = document.querySelector('.earthquakes');
-  const map = document.querySelector('.map');
-
-  init(map);
+  document.querySelector('.cache').innerHTML = cacheDescriptor(cacheInfo);
 
   earthquakes.forEach((quake) => {
     const {
@@ -63,4 +99,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     ul.appendChild(li);
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+  const map = document.querySelector('.map');
+
+  init(map);
+  
+  const links = document.querySelectorAll('.nav a');
+
+  links.forEach(link => {
+    const url = new URL(link.href);
+    const { searchParams } = url;
+
+    const type = searchParams.get('type');
+    const period = searchParams.get('period');
+
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      fetchAndRender(type, period);
+    });
+  });
+}); 

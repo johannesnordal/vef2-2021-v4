@@ -31,12 +31,10 @@ app.get('/', (req, res) => {
  * @param {function} next Næsta middleware
  */
 // eslint-disable-next-line no-unused-vars
-/*
 function notFoundHandler(req, res, next) {
   const title = 'Síða fannst ekki';
-  res.status(404).render('error', { title });
+  res.sendStatus(404);
 }
-*/
 
 /**
  * Middleware sem sér um villumeðhöndlun.
@@ -47,13 +45,11 @@ function notFoundHandler(req, res, next) {
  * @param {function} next Næsta middleware
  */
 // eslint-disable-next-line no-unused-vars
-/*
 function errorHandler(err, req, res, next) {
   console.error(err);
   const title = 'Villa kom upp';
-  res.status(500).render('error', { title });
+  res.sendStatus(500);
 }
-*/
 
 // app.use(notFoundHandler);
 // app.use(errorHandler);

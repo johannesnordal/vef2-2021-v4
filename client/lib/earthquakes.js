@@ -1,12 +1,19 @@
-const URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson';
+export async function fetchEarthquakes(type = 'significant', period = 'week') {
 
-export async function fetchEarthquakes(type = null, period = null) {
-  // TODO sækja gögn frá proxy þjónustu
+  const url = new URL('/proxy', window.location);
+
+  if (type) {
+    url.searchParams.append('type', type);
+  } 
+
+  if (period) {
+    url.searchParams.append('period', period);
+  }
 
   let result;
 
   try {
-    result = await fetch(URL, { 'Access-Control-Allow-Origin': 'http://127.0.0.1:3000' });
+    result = await fetch(url.href);
   } catch (e) {
     console.error('Villa við að sækja', e);
     return null;
@@ -19,5 +26,8 @@ export async function fetchEarthquakes(type = null, period = null) {
 
   const data = await result.json();
 
-  return data.features;
+  return {
+    earthquakes: data.data.features,
+    cacheInfo: data.info,
+  };
 }
