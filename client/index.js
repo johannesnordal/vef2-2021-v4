@@ -1,6 +1,6 @@
 import { fetchEarthquakes } from './lib/earthquakes';
 import { el, element, formatDate } from './lib/utils';
-import { init, createPopup } from './lib/map';
+import { init, createPopup, clearMarkers } from './lib/map';
 
 function dataDescriptor(type, period) {
   let iskType = `${type}+`;
@@ -29,7 +29,7 @@ function dataDescriptor(type, period) {
 function cacheDescriptor(cacheInfo) {
   let cacheStatus = '';
 
-  if (cacheInfo.cached) {
+  if (!cacheInfo.cached) {
     cacheStatus = 'ekki';
     console.log(cacheInfo.cached);
   }
@@ -41,18 +41,19 @@ function cacheDescriptor(cacheInfo) {
 }
 
 async function fetchAndRender(type, period) {
+
   const ul = document.querySelector('.earthquakes');
 
   while (ul.firstChild) {
     ul.removeChild(ul.firstChild);
   }
 
-  let loading = document.querySelector('.loading').innerHTML = 'Hleð gögnum...';
+  document.querySelector('.cache').innerHTML = '';
+  document.querySelector('.loading').innerHTML = 'Hleð gögnum...';
   
   const { earthquakes, cacheInfo } = await fetchEarthquakes(type, period);
 
-  loading = document.querySelector('.loading').innerHTML = '';
-
+  document.querySelector('.loading').innerHTML = '';
   document.querySelector('h1').innerHTML = dataDescriptor(type, period);
 
   if (!earthquakes) {
@@ -62,6 +63,14 @@ async function fetchAndRender(type, period) {
   }
 
   document.querySelector('.cache').innerHTML = cacheDescriptor(cacheInfo);
+
+  clearMarkers();
+
+  if (earthquakes.length === 0) {
+    const li = el('li', 'Engir jarðskjálftar á þessu tíma bili');
+    ul.appendChild(li);
+    return;
+  }
 
   earthquakes.forEach((quake) => {
     const {
