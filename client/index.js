@@ -23,7 +23,7 @@ function dataDescriptor(type, period) {
     iskPeriod = 'seinustu klukkustund';
   }
 
-  return `${iskType} jarðskjálftar ${iskPeriod}`
+  return `${iskType} jarðskjálftar ${iskPeriod}`;
 }
 
 function cacheDescriptor(cacheInfo) {
@@ -31,7 +31,6 @@ function cacheDescriptor(cacheInfo) {
 
   if (!cacheInfo.cached) {
     cacheStatus = 'ekki';
-    console.log(cacheInfo.cached);
   }
 
   const info = `Gögn eru ${cacheStatus} í cache.
@@ -41,7 +40,6 @@ function cacheDescriptor(cacheInfo) {
 }
 
 async function fetchAndRender(type, period) {
-
   const ul = document.querySelector('.earthquakes');
 
   while (ul.firstChild) {
@@ -50,18 +48,17 @@ async function fetchAndRender(type, period) {
 
   document.querySelector('.cache').innerHTML = '';
   document.querySelector('.loading').innerHTML = 'Hleð gögnum...';
-  
+
   const { earthquakes, cacheInfo } = await fetchEarthquakes(type, period);
 
-  document.querySelector('.loading').innerHTML = '';
-  document.querySelector('h1').innerHTML = dataDescriptor(type, period);
-
   if (!earthquakes) {
-    parent.appendChild(
-      el('p', 'Villa við að sækja gögn'),
+    ul.appendChild(
+      el('li', 'Villa við að sækja gögn'),
     );
   }
 
+  document.querySelector('.loading').innerHTML = '';
+  document.querySelector('h1').innerHTML = dataDescriptor(type, period);
   document.querySelector('.cache').innerHTML = cacheDescriptor(cacheInfo);
 
   clearMarkers();
@@ -111,14 +108,12 @@ async function fetchAndRender(type, period) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-
   const map = document.querySelector('.map');
-
   init(map);
-  
+
   const links = document.querySelectorAll('.nav a');
 
-  links.forEach(link => {
+  links.forEach((link) => {
     const url = new URL(link.href);
     const { searchParams } = url;
 
@@ -130,4 +125,4 @@ document.addEventListener('DOMContentLoaded', async () => {
       fetchAndRender(type, period);
     });
   });
-}); 
+});

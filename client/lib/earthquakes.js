@@ -1,10 +1,9 @@
 export async function fetchEarthquakes(type = 'significant', period = 'week') {
-
   const url = new URL('/proxy', window.location);
 
   if (type) {
     url.searchParams.append('type', type);
-  } 
+  }
 
   if (period) {
     url.searchParams.append('period', period);

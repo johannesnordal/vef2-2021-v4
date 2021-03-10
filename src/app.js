@@ -20,7 +20,7 @@ app.use(express.static(join(path, '../public')));
 app.use('/proxy', proxyRouter);
 
 app.get('/', (req, res) => {
-    res.sendFile(join(path, '../index.html'));
+  res.sendFile(join(path, '../index.html'));
 });
 
 /**
@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
  */
 // eslint-disable-next-line no-unused-vars
 function notFoundHandler(req, res, next) {
-  const title = 'Síða fannst ekki';
+  // const title = 'Síða fannst ekki';
   res.sendStatus(404);
 }
 
@@ -47,7 +47,7 @@ function notFoundHandler(req, res, next) {
 // eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
   console.error(err);
-  const title = 'Villa kom upp';
+  // const title = 'Villa kom upp';
   res.sendStatus(500);
 }
 

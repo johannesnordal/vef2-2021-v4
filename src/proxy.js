@@ -14,6 +14,7 @@ function getHostURL(query) {
 }
 
 async function fetchData(query) {
+  // eslint-disable-next-line prefer-const
   let { fresh, data } = await cacheGet(query);
 
   if (fresh) {
@@ -74,9 +75,7 @@ router.get('/', (req, res) => {
     return res.json(null);
   }
 
-  getData(query).then(data => {
-    return res.json(data);
-  }).catch(err => {
-    console.error(err);
-  });
+  getData(query).then((data) => res.json(data)).catch((err) => console.error(err));
+
+  return null;
 });

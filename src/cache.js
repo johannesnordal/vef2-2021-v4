@@ -18,14 +18,14 @@ function genKey(queryParams) {
 }
 
 export async function cacheGet(queryParams) {
-
   const cacheKey = genKey(queryParams);
 
   if (!client || !asyncGet) {
     return false;
   }
 
-  let fresh, cached;
+  let fresh;
+  let cached;
   try {
     fresh = await asyncGet(`${cacheKey}:age`);
     cached = await asyncGet(`${cacheKey}:data`);
@@ -53,7 +53,6 @@ export async function cacheGet(queryParams) {
 }
 
 export async function cacheSet(queryParams, data, ttl) {
-
   const cacheKey = genKey(queryParams);
 
   if (!client || !asyncSet) {
