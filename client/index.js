@@ -3,27 +3,27 @@ import { el, element, formatDate } from './lib/utils';
 import { init, createPopup, clearMarkers } from './lib/map';
 
 function dataDescriptor(type, period) {
-  let iskType = `${type}+`;
+  let isType = `${type}+`;
 
   if (type === 'all') {
-    iskType = 'Allir';
+    isType = 'Allir';
   } else if (type === 'significant') {
-    iskType = 'Verulegir';
+    isType = 'Verulegir';
   }
 
-  let iskPeriod;
+  let isPeriod;
 
   if (period === 'month') {
-    iskPeriod = 'seinasta mánuð';
+    isPeriod = 'seinasta mánuð';
   } else if (period === 'week') {
-    iskPeriod = 'seinustu viku';
+    isPeriod = 'seinustu viku';
   } else if (period === 'day') {
-    iskPeriod = 'seinasta dag';
+    isPeriod = 'seinasta dag';
   } else if (period === 'hour') {
-    iskPeriod = 'seinustu klukkustund';
+    isPeriod = 'seinustu klukkustund';
   }
 
-  return `${iskType} jarðskjálftar ${iskPeriod}`;
+  return `${isType} jarðskjálftar ${isPeriod}`;
 }
 
 function cacheDescriptor(cacheInfo) {
@@ -64,7 +64,7 @@ async function fetchAndRender(type, period) {
   clearMarkers();
 
   if (earthquakes.length === 0) {
-    const li = el('li', 'Engir jarðskjálftar á þessu tíma bili');
+    const li = el('li', 'Engir jarðskjálftar á þessu tímabili.');
     ul.appendChild(li);
     return;
   }
