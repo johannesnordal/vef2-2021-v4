@@ -3,7 +3,7 @@ import { el, element, formatDate } from './lib/utils';
 import { init, createPopup, clearMarkers } from './lib/map';
 
 function dataDescriptor(type, period) {
-  let isType = `${type}+`;
+  let isType = `${type}+ á ricther`;
 
   if (type === 'all') {
     isType = 'Allir';
