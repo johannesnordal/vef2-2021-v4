@@ -2,13 +2,10 @@ import util from 'util';
 import redis from 'redis';
 import dotenv from 'dotenv';
 
-// Þetta verður lesið úr .env síðar meir.
-// const REDIS_URL = 'redis://127.0.0.1:6379/0';
-
 dotenv.config();
 
 const {
-  REDIS_URL,
+  REDIS_URL = 'redis://127.0.0.1:6379/0',
 } = process.env;
 
 let client;
