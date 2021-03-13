@@ -19,36 +19,20 @@ app.use(express.static(join(path, '../public')));
 
 app.use('/proxy', proxyRouter);
 
-app.get('/', (req, res) => {
+app.use('/', (req, res) => {
   res.sendFile(join(path, '../index.html'));
 });
 
-/**
- * Middleware sem sér um 404 villur.
- *
- * @param {object} req Request hlutur
- * @param {object} res Response hlutur
- * @param {function} next Næsta middleware
- */
 // eslint-disable-next-line no-unused-vars
 function notFoundHandler(req, res, next) {
-  // const title = 'Síða fannst ekki';
-  res.sendStatus(404);
+  console.error(err);
+  res.status(404).send(`${err}`);
 }
 
-/**
- * Middleware sem sér um villumeðhöndlun.
- *
- * @param {object} err Villa sem kom upp
- * @param {object} req Request hlutur
- * @param {object} res Response hlutur
- * @param {function} next Næsta middleware
- */
 // eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
   console.error(err);
-  // const title = 'Villa kom upp';
-  res.sendStatus(500);
+  res.status(500).send(`${err}`);
 }
 
 // app.use(notFoundHandler);
