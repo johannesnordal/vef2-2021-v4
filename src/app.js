@@ -23,7 +23,7 @@ app.use('/proxy', proxyRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-async function index(req, res, next) {
+async function index(req, res) {
   res.sendFile(join(path, '../index.html'));
 }
 
