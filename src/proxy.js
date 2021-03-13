@@ -2,11 +2,14 @@ import express from 'express';
 import fetch from 'node-fetch';
 import { cacheGet, cacheSet } from './cache.js';
 import { timerStart, timerEnd } from './time.js';
-import { catchErrors } from './error.js';
 
 export const router = express.Router();
 
 const API_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/';
+
+function catchErrors(fn) {
+  return (req, res, next) => fn(req, res, next).catch(next);
+}
 
 function getHostURL(query) {
   const {
