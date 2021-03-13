@@ -23,11 +23,13 @@ app.use(express.static(join(path, '../public')));
 
 app.use('/proxy', proxyRouter);
 
+// eslint-disable-next-line no-unused-vars
 function notFoundHandler(req, res, next) {
   const title = 'Síða fannst ekki';
   res.status(404).send(title);
 }
 
+// eslint-disable-next-line no-unused-vars
 function errorHandler(req, res, next) {
   const title = 'Villa kom upp';
   res.status(500).send(title);
