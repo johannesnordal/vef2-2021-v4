@@ -5,11 +5,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 
 import { router as proxyRouter } from './proxy.js';
+import { catchErrors, notFoundHandler, errorHandler } from './error.js';
 
 dotenv.config();
 
 const {
-  PORT: port = 3001, // Mun verða proxyað af browser-sync í development
+  PORT: port = 3001,
 } = process.env;
 
 const app = express();
@@ -19,26 +20,15 @@ app.use(express.static(join(path, '../public')));
 
 app.use('/proxy', proxyRouter);
 
-app.use('/', (req, res) => {
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+async function index(req, res, next) {
   res.sendFile(join(path, '../index.html'));
-});
-
-// eslint-disable-next-line no-unused-vars
-function notFoundHandler(req, res, next) {
-  console.error(err);
-  res.status(404).send(`${err}`);
 }
 
-// eslint-disable-next-line no-unused-vars
-function errorHandler(err, req, res, next) {
-  console.error(err);
-  res.status(500).send(`${err}`);
-}
+app.get('/', catchErrors(index));
 
-// app.use(notFoundHandler);
-// app.use(errorHandler);
-
-// Verðum að setja bara *port* svo virki á heroku
 app.listen(port, () => {
   console.info(`Server running at http://localhost:${port}/`);
 });

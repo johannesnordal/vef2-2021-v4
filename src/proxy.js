@@ -2,6 +2,9 @@ import express from 'express';
 import fetch from 'node-fetch';
 import { cacheGet, cacheSet } from './cache.js';
 import { timerStart, timerEnd } from './time.js';
+import { catchErrors } from './error.js';
+
+export const router = express.Router();
 
 const API_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/';
 
@@ -63,19 +66,15 @@ async function getData(query) {
   };
 }
 
-export const router = express.Router();
-
-router.get('/', (req, res) => {
+async function main(req, res) {
   const query = {
     period: req.query.period,
     type: req.query.type,
   };
 
-  if (!query.period || !query.type) {
-    return res.json(null);
-  }
+  const data = await getData(query);
 
-  getData(query).then((data) => res.json(data)).catch((err) => console.error(err));
+  return res.json(data);
+}
 
-  return null;
-});
+router.get('/', catchErrors(main));
