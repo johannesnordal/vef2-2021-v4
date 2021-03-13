@@ -69,13 +69,18 @@ async function getData(query) {
   };
 }
 
-async function main(req, res) {
+async function main(req, res, next) {
   const query = {
     period: req.query.period,
     type: req.query.type,
   };
 
-  const data = await getData(query);
+  let data;
+  try {
+    data = await getData(query);
+  } catch (e) {
+    return next();
+  }
 
   return res.json(data);
 }
